@@ -4,6 +4,7 @@ import ProductItem from "./ProductItem/ProductItem";
 
 interface ItemListProps {
     data: IValantisItem[]
+    startNumber: number
 }
 
 
@@ -11,7 +12,9 @@ const ProductList = (props: ItemListProps) => {
 
     return (
         <div>
-            {props.data.map((item) => <ProductItem item={item}/>)}
+            <ol start={props.startNumber}>
+                {props.data.map((item) =>   <li><ProductItem item={item} key={item.id}/></li>)}
+            </ol>
         </div>
     );
 };

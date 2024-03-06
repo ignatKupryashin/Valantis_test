@@ -13,7 +13,6 @@ function getCurrentDateString(): string {
 }
 
 const getHashedPassword = (): string => {
-    console.log(`${PASSWORD}_${getCurrentDateString()}`)
     return md5(`${PASSWORD}_${getCurrentDateString()}`)
 }
 
@@ -23,10 +22,8 @@ export const MainApi: AxiosInstance = axios.create({
 })
 
 MainApi.interceptors.request.use((config: InternalAxiosRequestConfig<any>) => {
-    // Добавляем заголовок X-Auth к каждому запросу
     config.headers['X-Auth'] = getHashedPassword();
     return config;
 }, (error) => {
-    // Обработка ошибок при добавлении заголовка
     return Promise.reject(error);
 });
