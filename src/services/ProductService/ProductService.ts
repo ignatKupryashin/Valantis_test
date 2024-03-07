@@ -1,7 +1,7 @@
 import {MainApi} from "../../http/MainApi";
 import {AxiosResponse} from "axios";
 import {IValantisItem} from "../../models/IValantisItem";
-import {FilterItem, IFilter} from "../../models/Filter";
+import {Filter, FilterUnits} from "../../models/Filter";
 
 
 interface ValantisResponse<T> {
@@ -9,7 +9,7 @@ interface ValantisResponse<T> {
 }
 
 export interface getFieldsParams{
-    "field"?: FilterItem,
+    "field"?: FilterUnits,
     "offset"?: number,
     "limit"?: number
 }
@@ -22,11 +22,11 @@ export class ProductService {
         });
     }
 
-    static async getFilteredItemsIds(filter: IFilter): Promise<AxiosResponse<ValantisResponse<string[]>>> {
+    static async getFilteredItemsIds(inputFilter: Filter): Promise<AxiosResponse<ValantisResponse<string[]>>> {
+        console.log(inputFilter);
         return await MainApi.post('', {
             "action": "filter",
-            // "filter": filter
-            "params": {"product": "изумрудами", "price": 33700}
+            "params": inputFilter
         })
     }
 

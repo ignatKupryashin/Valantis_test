@@ -13,7 +13,7 @@ const ProductList = (props: ItemListProps) => {
     return (
         <div>
             <ol start={props.startNumber}>
-                {props.data.map((item) =>   <li><ProductItem item={item} key={item.id}/></li>)}
+                {props.data.map((item) =>   <li key={item.id}><ProductItem item={item}/></li>)}
             </ol>
         </div>
     );

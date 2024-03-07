@@ -1,14 +1,18 @@
-export enum FilterItem {
+export enum FilterUnits {
+    NO_FILTER = 'no filter',
     BRAND = 'brand',
-    ID = 'id',
     PRICE = 'price',
     PRODUCT = 'product'
 }
 
-export interface IFilter {
-    brand?: string,
-    id?: string,
-    price?: number,
-    product?: string
+export enum FilterValues {
+    'price' = 'Цена',
+    'product' = 'Наименование',
+    'brand' = 'Бренд',
+    'no filter' = '--Без фильтра--'
 }
+
+export type Filter = {
+    [K in FilterUnits]?: K extends 'price' ? number : string | undefined;
+};
 
