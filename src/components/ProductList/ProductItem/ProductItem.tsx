@@ -1,5 +1,7 @@
 import React from 'react';
 import {IValantisItem} from "../../../models/IValantisItem";
+import {Card} from "antd";
+import styles from "./ProductItem.module.scss"
 
 interface ProductItemProps {
     item: IValantisItem;
@@ -7,8 +9,13 @@ interface ProductItemProps {
 
 const ProductItem = (props: ProductItemProps) => {
     return (
-        <div>
-            {props.item.id} - {props.item.brand} - {props.item.product} - {props.item.price}
+        <div className={styles.productItem}>
+            <Card hoverable={true}>
+                {props.item.id}
+                {props.item.brand}
+                {props.item.product}
+                {props.item.price}
+            </Card>
         </div>
     );
 };

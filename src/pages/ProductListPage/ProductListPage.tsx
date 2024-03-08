@@ -7,14 +7,14 @@ import {AxiosError} from "axios";
 import Loader from "../../components/Loader/Loader";
 import {useDebouncedEffect} from "../../hooks/useDebouncedEffect";
 import FilterSelect from "../../components/FilterSelect/FilterSelect";
+import {Button, Input} from "antd";
+import styles from './ProductListPage.module.scss'
 
 const ProductListPage = () => {
 
-    // const [productIdList, setProductIdList] = useState<string[]>([]);
     const [currentProducts, setCurrentProducts] = useState<IValantisItem[]>([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
-    const [filterItem, setFilterItem] = useState<Filter>({});
     const [currentFilterOption, setCurrentFilterOption] = useState<FilterUnits>(FilterUnits.NO_FILTER);
     const [currentFilterValue, setCurrentFilterValue] = useState<string | number>('');
     const [productIdList, setProductIdList] = useState<string[]>([])
@@ -46,31 +46,10 @@ const ProductListPage = () => {
         getProducts().then(() => setIsLoading(false));
     }, [productIdList, currentPage], 300)
 
-
-    // useEffect(() => {
-    //     setIsLoading(true);
-    //     getIds(filterItem).then(() => setIsLoading(false));
-    // }, [filterItem]);
-
-    // useEffect(() => {
-    //     setTotalPagesCount(Math.ceil(productIdList.length / itemsPerPage));
-    // }, [productIdList]);
-
     useDebouncedEffect(() => {
         setIsLoading(true);
         getProducts().then(() => setIsLoading(false));
     }, [currentPage], 500);
-
-    // useDebouncedEffect(() => {
-    //     console.log(productNameFilter)
-    //     const newFilter: Filter = {};
-    //     productNameFilter.length > 0 && (newFilter.product = productNameFilter);
-    //     setFilterItem(newFilter);
-    // } ,[productNameFilter], 500);
-    //
-    // useEffect(() => {
-    //
-    // }, []);
 
 
     const nextPage = () => {
@@ -103,6 +82,7 @@ const ProductListPage = () => {
             }
         } catch (e) {
             console.error((e as AxiosError).message);
+            //повторить запрос в случае ошибки
             setTimeout(() => getIds(filter), 1000)
         }
     }
@@ -145,6 +125,7 @@ const ProductListPage = () => {
                 }
             } catch (e) {
                 console.error((e as AxiosError).message)
+                //повторить запрос в случае ошибки
                 setTimeout(getProducts, 1000)
             }
         } else setCurrentProducts([]);
@@ -158,15 +139,17 @@ const ProductListPage = () => {
             <p>filter</p>
             <div>
                 <FilterSelect currenValue={currentFilterOption} onChange={setCurrentFilterOption}/>
-                <input type={currentFilterOption === 'price' ? "number" : "text"}
+                <Input type={currentFilterOption === 'price' ? "number" : "text"}
                        disabled={currentFilterOption === FilterUnits.NO_FILTER} value={currentFilterValue}
                        onChange={(e) => filterChangeHandler(e)}/>
             </div>
-            <button onClick={previousPage}>PREV PAGE</button>
-            <button onClick={nextPage}>NEXT PAGE</button>
+            <Button onClick={previousPage}>PREV PAGE</Button>
+            <Button onClick={nextPage}>NEXT PAGE</Button>
+            <div className={styles.listBlock}>
             {isLoading ? (<Loader/>) : (currentProducts.length > 0 ?
                 <ProductList startNumber={(currentPage * itemsPerPage) + 1}
                              data={currentProducts}/> : "Нет данных для отрисовки")}
+            </div>
         </div>
     );
 };

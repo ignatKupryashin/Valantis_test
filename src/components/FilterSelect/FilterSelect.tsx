@@ -1,5 +1,6 @@
 import React, {Dispatch, SetStateAction} from 'react';
 import {FilterUnits, FilterValues} from "../../models/Filter";
+import {Radio, Select} from "antd";
 
 interface FilterSelectProps {
     currenValue: FilterUnits;
@@ -10,13 +11,13 @@ interface FilterSelectProps {
 
 const FilterSelect = (props: FilterSelectProps) => {
     return (
-        <select value={props.currenValue} onChange={(e) => props.onChange(e.target.value as FilterUnits)}>
+        <Select value={props.currenValue} onChange={(e) => props.onChange(e)}>
             {Object.values(FilterUnits).map((filter) => (
-                <option key={filter} value={filter}>
+                <Select.Option key={filter} value={filter}>
                     {FilterValues[filter]}
-                </option>
+                </Select.Option>
             ))}
-        </select>
+        </Select>
     );
 };
 

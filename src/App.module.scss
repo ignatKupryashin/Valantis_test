@@ -1,0 +1,11 @@
+@import "./styles/vars";
+
+.app {
+  width: 100%;
+  min-height: 100vh;
+}
+
+.container {
+  padding-left: calc(50% - $--max-screen-width / 2);
+  padding-right: calc(50% - $--max-screen-width / 2);
+}
