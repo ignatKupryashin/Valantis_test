@@ -23,7 +23,6 @@ export class ProductService {
     }
 
     static async getFilteredItemsIds(inputFilter: Filter): Promise<AxiosResponse<ValantisResponse<string[]>>> {
-        console.log(inputFilter);
         return await MainApi.post('', {
             "action": "filter",
             "params": inputFilter
