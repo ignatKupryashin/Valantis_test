@@ -1,4 +1,24 @@
-.product-item {
+.productItem {
   width: 300px;
-  background: red;
+  min-height: 250px;
+
+}
+
+.name {
+  font-size: 16px;
+  padding-bottom: 10px;
+}
+
+.price {
+  font-size: 16px;
+  font-style: italic;
+  color: darkred;
+}
+
+.id {
+  font-size: 8px;
+}
+
+.brand {
+  font-weight: 600;
 }

@@ -7,8 +7,10 @@ import {AxiosError} from "axios";
 import Loader from "../../components/Loader/Loader";
 import {useDebouncedEffect} from "../../hooks/useDebouncedEffect";
 import FilterSelect from "../../components/FilterSelect/FilterSelect";
-import {Button, Input} from "antd";
+import {Button, Divider, Input} from "antd";
 import styles from './ProductListPage.module.scss'
+import PageSwitcher from "../../components/PageSwitcher/PageSwitcher";
+import FilterBlock from "../../components/FilterBlock/FilterBlock";
 
 const ProductListPage = () => {
 
@@ -18,10 +20,9 @@ const ProductListPage = () => {
     const [currentFilterOption, setCurrentFilterOption] = useState<FilterUnits>(FilterUnits.NO_FILTER);
     const [currentFilterValue, setCurrentFilterValue] = useState<string | number>('');
     const [productIdList, setProductIdList] = useState<string[]>([])
-
-    const itemsPerPage: number = 50;
     const [totalPagesCount, setTotalPagesCount] = useState(1);
 
+    const itemsPerPage: number = 50;
 
     useEffect(() => {
         setIsLoading(true);
@@ -31,6 +32,7 @@ const ProductListPage = () => {
     useEffect(() => {
         setCurrentFilterValue('');
     }, [currentFilterOption]);
+
     useDebouncedEffect(() => {
         setIsLoading(true);
         if (currentFilterValue === '' || currentFilterValue === 0) {
@@ -44,32 +46,7 @@ const ProductListPage = () => {
 
     useDebouncedEffect(() => {
         getProducts().then(() => setIsLoading(false));
-    }, [productIdList, currentPage], 300)
-
-    useDebouncedEffect(() => {
-        setIsLoading(true);
-        getProducts().then(() => setIsLoading(false));
-    }, [currentPage], 500);
-
-
-    const nextPage = () => {
-        console.log(productIdList);
-        if (currentPage < (totalPagesCount - 1)) {
-            setIsLoading(true);
-            setCurrentPage(currentPage + 1)
-        }
-    }
-    const previousPage = () => {
-        if (currentPage > 0) {
-            setIsLoading(true);
-            setCurrentPage(currentPage - 1)
-        }
-    }
-
-    const checkPages = () => {
-        setCurrentPage(0);
-    }
-
+    }, [productIdList, currentPage], 1500)
 
     const getIds = async (filter?: Filter) => {
         try {
@@ -78,7 +55,7 @@ const ProductListPage = () => {
                 const filteredData = filterIds(inputData.data.result);
                 setProductIdList(filteredData);
                 getTotalPages(filteredData);
-                checkPages();
+                setCurrentPage(0);
             }
         } catch (e) {
             console.error((e as AxiosError).message);
@@ -87,18 +64,8 @@ const ProductListPage = () => {
         }
     }
 
-
     const getTotalPages = (data: any[]) => {
         setTotalPagesCount(Math.ceil(data.length / itemsPerPage));
-    }
-
-    const filterChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (currentFilterOption === FilterUnits.PRICE) {
-            setCurrentFilterValue(Number(e.target.value))
-        }
-        else {
-            setCurrentFilterValue(e.target.value)
-        }
     }
 
     const filterProducts = (data: IValantisItem[]): IValantisItem[] => {
@@ -133,22 +100,14 @@ const ProductListPage = () => {
 
     return (
         <div>
-            {totalPagesCount > 0 ? <> Страница: {currentPage + 1} из {totalPagesCount}; </> : <>Данных с указанными
-                параметрами не найдено</>}
-            <br/>
-            <p>filter</p>
-            <div>
-                <FilterSelect currenValue={currentFilterOption} onChange={setCurrentFilterOption}/>
-                <Input type={currentFilterOption === 'price' ? "number" : "text"}
-                       disabled={currentFilterOption === FilterUnits.NO_FILTER} value={currentFilterValue}
-                       onChange={(e) => filterChangeHandler(e)}/>
-            </div>
-            <Button onClick={previousPage}>PREV PAGE</Button>
-            <Button onClick={nextPage}>NEXT PAGE</Button>
+<h1 className={styles.heading}>Тестовое задание <span className={styles.highlight}>Валантис</span></h1>
+           <FilterBlock currentFilterOption={currentFilterOption} currentFilterValue={currentFilterValue} setCurrentFilterOption={setCurrentFilterOption} setCurrentFilterValue={setCurrentFilterValue}/>
+            {currentProducts.length > 0 && <PageSwitcher totalPagesCount={totalPagesCount} currentPage={currentPage} setCurrentPage={setCurrentPage} setIsLoading={setIsLoading}/>}
+           <Divider/>
             <div className={styles.listBlock}>
-            {isLoading ? (<Loader/>) : (currentProducts.length > 0 ?
-                <ProductList startNumber={(currentPage * itemsPerPage) + 1}
-                             data={currentProducts}/> : "Нет данных для отрисовки")}
+                {isLoading ? (<Loader/>) : (currentProducts.length > 0 ?
+                    <ProductList startNumber={(currentPage * itemsPerPage) + 1}
+                                 data={currentProducts}/> : "Товаров с указанными параметрами не найдено")}
             </div>
         </div>
     );
